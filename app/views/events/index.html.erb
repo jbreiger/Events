@@ -1,0 +1,82 @@
+<h1>Events</h1>
+<p> Go to other events </p>
+<h3> Welcome <%=@user.first_name%> </h3>
+<p> <a href="/users/<%=@user.id%>"> Edit my profile</a> </p>
+
+<p> Here are some of the events in your state </p>
+
+<table>
+	<thead> 
+		<tr> 
+			<td> Name </td>
+			<td> Date </td>
+			<td> Location </td>
+			<td> Host </td>
+			<td> Action/status </td>
+	</thead>
+	<%@events.each do |x|%>
+		<tr>
+			<% if x.state ==@user.state%>
+			<td> <a href="events/<%=x.id%>"> <%=x.name%> </td>
+			<td>  <%=x.date%> </td>
+			<td> <%=x.city%> </td>
+			<td> <%=x.host%> </td>
+			<%if x.host == @user.first_name %>
+
+			<td> <a href="/events/<%=x.id%>"> Edit </a> | <a href="/user/<%=@user.id%>"> details </a> </td>
+			<%else%>
+			<td> <a href="/events/<%=x.id%>"> Edit </a> | <a href= "events/<%= x.id %>" data-method='delete'> delete this event</a>
+  <input name="_method" value="delete" type="hidden"> </a> </td>
+
+			<%end%>
+		</tr>
+		<%end%>	
+		<%end%>
+</table>			
+
+
+<p> Here are some of the other events in other states </p>
+
+<table>
+	<thead> 
+		<tr> 
+			<td> Name </td>
+			<td> Date </td>
+			<td> Location </td>
+			<td> Host </td>
+			<td> Action/status </td>
+	</thead>
+	<%@events.each do |x|%>
+		<tr>
+			<% if x.state !=@user.state%>
+			<td> <a href="events/<%=x.id%>"> <%=x.name%> </td>
+			<td>  <%=x.date%> </td>
+			<td> <%=x.city%> </td>
+			<td> <%=x.host%> </td>
+			<%if x.host == @user.first_name %>
+
+			<td> <a href="/events/<%=x.id%>"> Edit </a> | <a href="/user/<%=@user.id%>"> details </a> </td>
+			<%else%>
+			<td> <a href="/events"> Join </a> | <a href="/user/<%=@user.id%>"> cancel </a> </td>
+
+			<%end%>
+		</tr>
+		<%end%>	
+		<%end%>
+</table>	
+
+
+
+<h3> Add Event </h3>
+	<form action="events" method="POST">
+		<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+		Name <input type="text" name="event[name]">
+		Date <input type="date" name="event[date]">
+		Location <input type="text" name="event[city]">
+		<select name="event[state]">
+			<%@states.each do |name,abbreviation| %>
+     		<option value="<%=abbreviation%>"> <%=abbreviation%>
+     		<%end%>
+		</select>		
+		<button type="submit"> Add Event </button>
+	</form>	
